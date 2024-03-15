@@ -10,6 +10,7 @@ function IssueTracker (){
     const [updateId, setUpdateId] = useState('');
     const [updateTitle, setUpdateTitle] = useState('');
     const [updateDescription, setUpdateDescription] = useState('');
+    const [deleteId, setDeleteId] = useState('');
 
 
 
@@ -60,7 +61,7 @@ function IssueTracker (){
             setUpdateDescription('');
             
           } catch (error) {
-            console.log('Error retrieving issues:', error.message);
+            console.log('Error updating issues:', error.message);
           }
     }
 
@@ -68,13 +69,12 @@ function IssueTracker (){
         try {
             const options = {
                 method: 'DELETE',
-                headers: {'Content-Type': 'application/json'},
-                body:""
             }
-            const response = await fetch(BASE_URL,options);
-            const data = await response.json();
+            const updatedIssues = issues.filter((issue) => issue.id !== parseInt(deleteId));
+            setIssues(updatedIssues);
+            setDeleteId('');
           } catch (error) {
-            console.log('Error retrieving issues:', error.message);
+            console.log('Error deleting issues:', error.message);
           }
     }
     useEffect(() => {
@@ -116,7 +116,7 @@ function IssueTracker (){
         </div>
         <div>
             <h2>Delete Issues</h2>
-            <input type="text" placeholder='Issue ID'></input>
+            <input type="text" placeholder='Issue ID' value={deleteId} onChange={(e) => setDeleteId(e.target.value)}></input>
             <button onClick={deleteIssue}>Delete Issue</button>
         </div>
             
