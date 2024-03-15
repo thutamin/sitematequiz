@@ -5,6 +5,9 @@ const BASE_URL = "http://localhost:5000/api/issues"
 
 function IssueTracker (){
     const [issues,setIssues] = useState([]);
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
+
 
 
     async function fetchIssues(){
@@ -22,12 +25,15 @@ function IssueTracker (){
             const options = {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body:""
+                body: JSON.stringify({ title, description }),
             }
             const response = await fetch(BASE_URL,options);
             const data = await response.json();
+            setIssues([...issues, data]);
+            setTitle('');
+            setDescription('');
           } catch (error) {
-            console.log('Error retrieving issues:', error.message);
+            console.log('Error creating issues:', error.message);
           }
     }
 
@@ -84,8 +90,8 @@ function IssueTracker (){
         </div>
         <div>
             <h2>Create Issue</h2>
-            <input type="text" placeholder='Title'></input>
-            <input type="text" placeholder='Description'></input>
+            <input type="text" placeholder='Title' value={title} onChange={(e) => setTitle(e.target.value)}></input>
+            <input type="text" placeholder='Description' value={description} onChange={(e) => setDescription(e.target.value)}></input>
             <button onClick={createIssue}>Create Issue</button>
 
 
