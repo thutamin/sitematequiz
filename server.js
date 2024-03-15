@@ -3,7 +3,7 @@
 const http = require('http');
 const url = require('url');
 
-
+// Server Class
 class Server{
     constructor(){
         this._issues = [
@@ -34,13 +34,13 @@ class Server{
         console.log(method);
 
         if(method === "GET" && path === '/api/issues' ){
-            this.getIssue();
+            this.getIssue(res);
         }else if(method === "POST"  && path === '/api/issues'){
-            this.createIssue();
+            this.createIssue(req,res);
         }else if(method === "PUT"  && path === '/api/issues'){
-            this.updateIssue();
+            this.updateIssue(req,res);
         }else if(method === "DELETE"  && path === '/api/issues'){
-            this.deleteIssue();
+            this.deleteIssue(req,res);
         }else{
             this.pathNotFound(res);
         }
@@ -53,14 +53,14 @@ class Server{
     }
 
     // Read Issue
-    getIssue(){
+    getIssue(res){
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
         res.end(JSON.stringify(this._issues));
     }
 
     // Create Issue
-    createIssue(){
+    createIssue(req,res){
         let body = "";
         req.on('data',(chunk) => {body += chunk.toString()})
         req.on('end', () => {
@@ -75,7 +75,7 @@ class Server{
     }
     // Update Issue
 
-    updateIssue(){
+    updateIssue(req,res){
         let body = "";
         req.on('data',(chunk) => {body += chunk.toString()});
         req.on('end', () => {
@@ -96,7 +96,7 @@ class Server{
 
 
     // Delete Issue
-    deleteIssue(){
+    deleteIssue(req,res){
         const urlObject = url.parse(req.url, true);
         const issueId = parseInt(urlObject.query.id);
         const index = this._issues.findIndex((issue) => issue.id === issueId);
