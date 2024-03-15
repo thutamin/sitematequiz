@@ -7,6 +7,9 @@ function IssueTracker (){
     const [issues,setIssues] = useState([]);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
+    const [updateId, setUpdateId] = useState('');
+    const [updateTitle, setUpdateTitle] = useState('');
+    const [updateDescription, setUpdateDescription] = useState('');
 
 
 
@@ -42,11 +45,19 @@ function IssueTracker (){
             const options = {
                 method: 'PUT',
                 headers: {'Content-Type': 'application/json'},
-                body:""
+                body: JSON.stringify({
+                    id: parseInt(updateId),
+                    title: updateTitle,
+                    description: updateDescription,
+                  }),
             }
-            const response = await fetch(BASE_URL);
+            const response = await fetch(BASE_URL,options);
             const data = await response.json();
-           
+            const updatedIssues = issues.map((issue) =>issue.id === data.id ? data : issue);
+            setIssues(updatedIssues);
+            setUpdateId('');
+            setUpdateTitle('');
+            setUpdateDescription('');
             
           } catch (error) {
             console.log('Error retrieving issues:', error.message);
@@ -98,9 +109,9 @@ function IssueTracker (){
         </div>
         <div>
             <h2>Update Issue</h2>
-            <input type="text" placeholder='Issue ID'></input>
-            <input type="text" placeholder='Title'></input>
-            <input type="text" placeholder='Description'></input>
+            <input type="text" placeholder='Issue ID' value={updateId} onChange={(e) => setUpdateId(e.target.value)}></input>
+            <input type="text" placeholder='Title' value={updateTitle} onChange={(e) => setUpdateTitle(e.target.value)}></input>
+            <input type="text" placeholder='Description' value={updateDescription} onChange={(e) => setUpdateDescription(e.target.value)}></input>
             <button onClick={updateIssue}>Update Issue</button>
         </div>
         <div>
