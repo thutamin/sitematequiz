@@ -83,7 +83,7 @@ function IssueTracker (){
 
 
     return(
-    <div>
+    <div >
         <h1>Sitemate Issue Tracker</h1>
 
         <div>
@@ -92,7 +92,7 @@ function IssueTracker (){
                 <ul>
                 {issues.map((issue) => (
                 <li key={issue.id}>
-                    <strong>{issue.title}</strong> - {issue.description}
+                    <strong>{issue.id}</strong> - <strong>{issue.title}</strong> - {issue.description}
                 </li>
                 ))}
                 </ul>
