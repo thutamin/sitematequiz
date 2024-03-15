@@ -80,9 +80,9 @@ class Server{
         req.on('data',(chunk) => {body += chunk.toString()});
         req.on('end', () => {
             const updatedIssue = JSON.parse(body);
-            const index = this.issues.findIndex((issue) => issue.id === updatedIssue.id);
+            const index = this._issues.findIndex((issue) => issue.id === updatedIssue.id);
             if (index !== -1) {
-              this.issues[index] = updatedIssue;
+              this._issues[index] = updatedIssue;
               console.log('Issue updated:', updatedIssue);
               res.statusCode = 200;
               res.setHeader('Content-Type', 'application/json');
@@ -99,11 +99,16 @@ class Server{
     deleteIssue(){
         const urlObject = url.parse(req.url, true);
         const issueId = parseInt(urlObject.query.id);
-        const index = this.issues.findIndex((issue) => issue.id === issueId);
-        const deletedIssue = this.issues.splice(index, 1)[0];
-        console.log('Issue deleted:', deletedIssue);
-        res.statusCode = 200;
-        res.end('Issue deleted');
+        const index = this._issues.findIndex((issue) => issue.id === issueId);
+        if (index !== -1) {
+          const deletedIssue = this._issues.splice(index, 1)[0];
+          console.log('Issue deleted:', deletedIssue);
+          res.statusCode = 200;
+          res.end('Issue deleted');
+        } else {
+          res.statusCode = 404;
+          res.end('Issue not found');
+        }
     
     }
 
