@@ -93,9 +93,18 @@ class Server{
             }
           });
     }
+
+
     // Delete Issue
     deleteIssue(){
-        console.log("Deleting Issue")
+        const urlObject = url.parse(req.url, true);
+        const issueId = parseInt(urlObject.query.id);
+        const index = this.issues.findIndex((issue) => issue.id === issueId);
+        const deletedIssue = this.issues.splice(index, 1)[0];
+        console.log('Issue deleted:', deletedIssue);
+        res.statusCode = 200;
+        res.end('Issue deleted');
+    
     }
 
 }
