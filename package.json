@@ -1,0 +1,11 @@
+{
+  "name": "sitematequiz",
+  "version": "1.0.0",
+  "description": "Sitemate quiz",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Min Thu Ta",
+  "license": "ISC"
+}
