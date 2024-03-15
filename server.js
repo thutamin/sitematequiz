@@ -2,6 +2,7 @@
 
 const http = require('http');
 const url = require('url');
+const cors = require('cors');
 
 // Server Class
 class Server{
@@ -28,7 +29,8 @@ class Server{
 
     // Request Handler
     requestHandler(req,res){
-        const method = req.method;
+        cors()(req,res,() =>{
+            const method = req.method;
         const urlObject = url.parse(req.url,true)
         const path = urlObject.pathname;
         console.log(method);
@@ -44,6 +46,8 @@ class Server{
         }else{
             this.pathNotFound(res);
         }
+        })
+        
     }
 
     // when a path is not found

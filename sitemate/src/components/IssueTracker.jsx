@@ -1,6 +1,6 @@
 import React, {useState,useEffect} from 'react';
 
-const BASE_URL = "http://localhost:5000/"
+const BASE_URL = "http://localhost:5000/api/issues"
 
 
 function IssueTracker (){
@@ -9,7 +9,7 @@ function IssueTracker (){
 
     async function fetchIssues(){
         try {
-            const response = await fetch(API_BASE_URL);
+            const response = await fetch(BASE_URL);
             const data = await response.json();
             setIssues(data);
           } catch (error) {
@@ -19,9 +19,13 @@ function IssueTracker (){
 
     async function createIssue(){
         try {
-            const response = await fetch(API_BASE_URL);
+            const options = {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body:""
+            }
+            const response = await fetch(BASE_URL,options);
             const data = await response.json();
-            setIssues(data);
           } catch (error) {
             console.log('Error retrieving issues:', error.message);
           }
@@ -29,9 +33,15 @@ function IssueTracker (){
 
     async function updateIssue(){
         try {
-            const response = await fetch(API_BASE_URL);
+            const options = {
+                method: 'PUT',
+                headers: {'Content-Type': 'application/json'},
+                body:""
+            }
+            const response = await fetch(BASE_URL);
             const data = await response.json();
-            setIssues(data);
+           
+            
           } catch (error) {
             console.log('Error retrieving issues:', error.message);
           }
@@ -39,14 +49,20 @@ function IssueTracker (){
 
     async function deleteIssue(){
         try {
-            const response = await fetch(API_BASE_URL);
+            const options = {
+                method: 'DELETE',
+                headers: {'Content-Type': 'application/json'},
+                body:""
+            }
+            const response = await fetch(BASE_URL,options);
             const data = await response.json();
-            setIssues(data);
           } catch (error) {
             console.log('Error retrieving issues:', error.message);
           }
     }
-    
+    useEffect(() => {
+        fetchIssues();
+    },[])
 
 
     return(
@@ -55,6 +71,15 @@ function IssueTracker (){
 
         <div>
             <h2>Get Issues</h2>
+            <div>
+                <ul>
+                {issues.map((issue) => (
+                <li key={issue.id}>
+                    <strong>{issue.title}</strong> - {issue.description}
+                </li>
+                ))}
+                </ul>
+            </div>
             <button onClick={fetchIssues}>Get Issues</button>
         </div>
         <div>
