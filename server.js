@@ -33,13 +33,13 @@ class Server{
         const path = urlObject.pathname;
         console.log(method);
 
-        if(method === "GET"){
+        if(method === "GET" && path === '/api/issues' ){
             this.getIssue();
-        }else if(method === "POST"){
+        }else if(method === "POST"  && path === '/api/issues'){
             this.createIssue();
-        }else if(method === "PUT"){
+        }else if(method === "PUT"  && path === '/api/issues'){
             this.updateIssue();
-        }else if(method === "DELETE"){
+        }else if(method === "DELETE"  && path === '/api/issues'){
             this.deleteIssue();
         }else{
             this.pathNotFound(res);
@@ -48,23 +48,50 @@ class Server{
 
     // when a path is not found
     pathNotFound(res){
-        res.satatusCode = 404;
+        res.statusCode = 404;
         res.end('Not found')
     }
 
     // Read Issue
     getIssue(){
-        console.log("Getting Issue")
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify(this._issues));
     }
 
     // Create Issue
     createIssue(){
-        console.log("Creating Issue")
+        let body = "";
+        req.on('data',(chunk) => {body += chunk.toString()})
+        req.on('end', () => {
+            const newIssue = JSON.parse(body);
+            newIssue.id = this._issues.length + 1;
+            this._issues.push(newIssue);
+            console.log('New issue:', newIssue);
+            res.statusCode = 201;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify(newIssue));
+          });
     }
     // Update Issue
 
     updateIssue(){
-        console.log("Updating Issue")
+        let body = "";
+        req.on('data',(chunk) => {body += chunk.toString()});
+        req.on('end', () => {
+            const updatedIssue = JSON.parse(body);
+            const index = this.issues.findIndex((issue) => issue.id === updatedIssue.id);
+            if (index !== -1) {
+              this.issues[index] = updatedIssue;
+              console.log('Issue updated:', updatedIssue);
+              res.statusCode = 200;
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify(updatedIssue));
+            } else {
+              res.statusCode = 404;
+              res.end('Issue not found');
+            }
+          });
     }
     // Delete Issue
     deleteIssue(){
